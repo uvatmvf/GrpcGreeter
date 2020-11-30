@@ -20,8 +20,11 @@ namespace GrpcGreeterClient
             var cancellationToken = new CancellationTokenSource();
             var replyStream = client.SayHelloStreamingFromServer(new HelloRequest() { Name = "StreamGreeterClient" },
                 cancellationToken: cancellationToken.Token);
-            await replyStream.ResponseStream.MoveNext(cancellationToken.Token);
-            Console.WriteLine($"Stream greeting: {replyStream.ResponseStream.Current.Message}");
+
+            while (await replyStream.ResponseStream.MoveNext(cancellationToken.Token))
+            {
+                Console.WriteLine($"Stream greeting: {replyStream.ResponseStream.Current.Message}");
+            }
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
