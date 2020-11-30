@@ -3,3 +3,4 @@
 ################################################################################
 
 /GrpcGreeterClient/bin/Debug/netcoreapp3.1
+/GrpcGreeterClient/obj/Debug/net5.0
