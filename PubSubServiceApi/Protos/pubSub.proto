@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "PubSubService";
+
+import "google/protobuf/empty.proto";
+
+package PubSubService;
+
+// The greeting service definition.
+service PubSub {
+  // Sends a greeting
+  rpc GetAnEvent (google.protobuf.Empty) returns (Event);
+  rpc Subscribe(Subscription) returns (stream Event);
+  rpc Unsubscribe(Subscription) returns (Unsubscription);
+}
+
+message Event {
+	string Value = 1;
+}
+
+message Subscription {
+	string Id = 1;
+}
+
+message Unsubscription {
+	string Id = 1;
+}
