@@ -10,9 +10,12 @@ namespace SubscriberConsoleClient
     public class SubscriberClient : Subscriber
     {
         private const int MillisecondsDelay = 2000;
-
         private CancellationTokenSource _cancellationToken;
         private Subscriber _subscriber;
+        private Func<Channel> _channelFactory;
+
+        public SubscriberClient(Func<Channel> channelFactory) => 
+            _channelFactory = channelFactory;
 
         public new event EventHandler<Event> OnEventReceived
         {
@@ -23,10 +26,9 @@ namespace SubscriberConsoleClient
 
         public override Task Subscribe(string subscriptionId)
         {
-            var channel = new Channel("localhost:50051", ChannelCredentials.Insecure);
+            var channel = _channelFactory.Invoke();
             var client = new PubSub.PubSubClient(channel);
             _subscriber = new EventSubscriber(client);
-
             _cancellationToken = new CancellationTokenSource();
             var loopTask = Task.Run(async () =>
             {
@@ -46,8 +48,8 @@ namespace SubscriberConsoleClient
 
         public override void Unsubscribe()
         {
-            _cancellationToken.Cancel();
-            _subscriber.Unsubscribe();
+            _cancellationToken?.Cancel();
+            _subscriber?.Unsubscribe();
         }
 
     }

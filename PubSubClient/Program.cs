@@ -11,7 +11,7 @@ namespace SubscriberConsoleClient
     {
         static void Main(string[] args)
         {
-            var subscriber = new SubscriberClient();
+            var subscriber = new SubscriberClient(() => new Channel("localhost:50051", ChannelCredentials.Insecure));
             subscriber.Subscribe(Guid.NewGuid().ToString("N"));
 
             subscriber.OnEventReceived += Subscriber_OnEventReceived;            
