@@ -10,7 +10,6 @@ namespace SubscriberConsoleClient
     {
         private static PubSubClient _pubSubClient;
         private Subscription _subscription;
-        private CancellationTokenSource _cancellationTokenSource;
 
         public EventSubscriber(PubSubClient pubSubClient) => 
             _pubSubClient = pubSubClient;
@@ -27,21 +26,21 @@ namespace SubscriberConsoleClient
             Console.WriteLine($">> SubscriptionId : { subscriptionId}");
             using(var call = _pubSubClient.Subscribe(_subscription))
             {
-                _cancellationTokenSource = new CancellationTokenSource();
+                CancellationTokenSource = new CancellationTokenSource();
                 await Task.Run(async () =>
                 {
-                    while (await call.ResponseStream.MoveNext(_cancellationTokenSource.Token))
+                    while (await call.ResponseStream.MoveNext(CancellationTokenSource.Token))
                     {
                         ReceiveEvent(call.ResponseStream.Current);                        
                     }
-                }, _cancellationTokenSource.Token);
+                }, CancellationTokenSource.Token);
             }
         }
 
         public override void Unsubscribe()
         {
-            _cancellationTokenSource.Cancel();
-            _pubSubClient.Unsubscribe(_subscription);
+            CancellationTokenSource?.Cancel();
+            _pubSubClient?.Unsubscribe(_subscription);
         }
     }    
 }

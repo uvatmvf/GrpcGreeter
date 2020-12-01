@@ -10,7 +10,7 @@ namespace SubscriberConsoleClient
     public class SubscriberClient : Subscriber
     {
         private const int MillisecondsDelay = 2000;
-        private CancellationTokenSource _cancellationToken;
+        //TODO refactor common logic out of inheritance.
         private Subscriber _subscriber;
         private Func<Channel> _channelFactory;
 
@@ -29,10 +29,10 @@ namespace SubscriberConsoleClient
             var channel = _channelFactory.Invoke();
             var client = new PubSub.PubSubClient(channel);
             _subscriber = new EventSubscriber(client);
-            _cancellationToken = new CancellationTokenSource();
+            CancellationTokenSource = new CancellationTokenSource();
             var loopTask = Task.Run(async () =>
             {
-                while (!_cancellationToken.IsCancellationRequested)
+                while (!CancellationTokenSource.IsCancellationRequested)
                 {
                     var reply = client.GetAnEvent(new Empty());
                     OnGetAnEvent?.Invoke($"GetAnEvent : {reply}");
@@ -48,7 +48,7 @@ namespace SubscriberConsoleClient
 
         public override void Unsubscribe()
         {
-            _cancellationToken?.Cancel();
+            CancellationTokenSource?.Cancel();
             _subscriber?.Unsubscribe();
         }
 
