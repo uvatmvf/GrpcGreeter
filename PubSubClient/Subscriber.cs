@@ -7,7 +7,7 @@ namespace SubscriberConsoleClient
     public abstract class Subscriber
     {
         public event EventHandler<Event> OnEventReceived;
-        public void SendEvent(Event e) => OnEventReceived?.Invoke(this, e);
+        public void ReceiveEvent(Event e) => OnEventReceived?.Invoke(this, e);
         public abstract Task Subscribe(string subscriptionId);
         public abstract void Unsubscribe();
     }
