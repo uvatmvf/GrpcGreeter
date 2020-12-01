@@ -1,8 +1,5 @@
 ﻿using PubSubServiceApi;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static PubSubServiceApi.PubSub;
@@ -14,7 +11,8 @@ namespace PubSubConsoleClient
         private static PubSubClient _pubSubClient;
         private Subscription _subscription;
 
-        public Subscriber(PubSubClient pubSubClient) => _pubSubClient = pubSubClient;
+        public Subscriber(PubSubClient pubSubClient) => 
+            _pubSubClient = pubSubClient;
 
         public async Task Subscribe(string subscriptionId)
         {
