@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using PubSubService;
+using PubSubServer;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ namespace PubSubServiceApi.Services
     public class PubSubImpl : PubSub.PubSubBase
     {
         private readonly BufferBlock<SubscriptionEvent> _buffer = new BufferBlock<SubscriptionEvent>();
+
         public Dictionary<string, IServerStreamWriter<Event>> SubscriberWritersMap { get; private set; }
 
         public PubSubImpl()
@@ -29,12 +30,12 @@ namespace PubSubServiceApi.Services
         {
             SubscriberWritersMap[request.Id] = responseStream;
 
-            while(SubscriberWritersMap.Count>0)
+            while(SubscriberWritersMap.Count > 0)
             {
                 var subscriptionEvent = await _buffer.ReceiveAsync();
                 if (SubscriberWritersMap.ContainsKey(subscriptionEvent.SubscriptionId))
                 {
-                    await SubscriberWritersMap[subscriptionEvent.SubscriptionId].WriteAsync(subscriptionEvent.EventArgs);
+                    await SubscriberWritersMap[subscriptionEvent.SubscriptionId].WriteAsync(subscriptionEvent.Event);
                 }
             }
         }

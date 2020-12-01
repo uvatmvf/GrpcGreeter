@@ -1,10 +1,10 @@
-﻿using PubSubService;
+﻿using PubSubServiceApi;
 
-namespace PubSubServiceApi
+namespace PubSubServer
 {
     public class SubscriptionEvent
     {
-        public Event EventArgs { get; set; }
+        public Event Event { get; set; }
         public string SubscriptionId { get; set; }
     }
 }

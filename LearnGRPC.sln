@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterClient", "GrpcGr
 		{E610E578-A636-4A02-9E1F-9D3E592C36BC} = {E610E578-A636-4A02-9E1F-9D3E592C36BC}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubSubClient", "PubSubClient\PubSubClient.csproj", "{E041D2AD-8CA5-425C-A9D2-E28FFEA10C40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubSubConsoleClient", "PubSubClient\PubSubConsoleClient.csproj", "{E041D2AD-8CA5-425C-A9D2-E28FFEA10C40}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubSubServer", "PubSubServer\PubSubServer.csproj", "{B9FDB779-A56D-436A-B9F5-77F5A4F8EAB7}"
 EndProject

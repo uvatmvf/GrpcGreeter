@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using PubSubService;
+using PubSubServiceApi;
 using System;
 using System.Linq;
 using System.Threading;
@@ -11,7 +11,7 @@ namespace PubSubServer
     {
         const int Port = 50051;
 
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var service = new PubSubServiceApi.Services.PubSubImpl();
             Server server = new Server
@@ -24,23 +24,23 @@ namespace PubSubServer
             var cancellationToken = new CancellationTokenSource();
             var randomGenerator = new Random(1000);
 
-            await Task.Run(async () =>
+            Task.Run(async () =>
             {
                 while(!cancellationToken.IsCancellationRequested)
                 {
                     if (service.SubscriberWritersMap.Count > 0)
                     {
                         var indexedKeys = service.SubscriberWritersMap.Select((kvp, idx) =>
-                            new { Idx = idx, Key = kvp.Key });
+                            new { Idx = idx, kvp.Key });
 
                         var subscriptionIdx = randomGenerator.Next(service.SubscriberWritersMap.Count);
                         var randomSubscriptionId = indexedKeys.Single(x => x.Idx == subscriptionIdx).Key;
 
-                        service.Publish(new PubSubServiceApi.SubscriptionEvent()
+                        service.Publish(new SubscriptionEvent()
                         {
-                            EventArgs = new Event()
+                            Event = new Event()
                             {
-                                Value = $"And event for '{randomSubscriptionId}' {Guid.NewGuid().ToString("N")}"
+                                Value = $"And event for '{randomSubscriptionId}' {Guid.NewGuid():N}"
                             },
                             SubscriptionId = randomSubscriptionId
                         });
@@ -50,6 +50,8 @@ namespace PubSubServer
                 }
             }, cancellationToken.Token);
 
+            Console.WriteLine("Greeter server listening on port " + Port);
+            Console.WriteLine("Press any key to stop the server...");
             Console.ReadKey();
             cancellationToken.Cancel();
             server.ShutdownAsync().Wait();
