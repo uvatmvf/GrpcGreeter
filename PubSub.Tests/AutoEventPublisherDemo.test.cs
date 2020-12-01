@@ -7,8 +7,6 @@ namespace PubSub.Tests
     public class AutoEventPublisherDemoTests
     {       
 
-
-
         [Test]
         public void OpenServerDoesNotThrowExceptions()
         {
