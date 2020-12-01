@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PubSubClient\SubscriberConsoleClient.csproj" />
+    <ProjectReference Include="..\PubSubServer\PubSubServer.csproj" />
     <ProjectReference Include="..\PubSubServiceApi\PubSubServiceApi.csproj" />
   </ItemGroup>
 
