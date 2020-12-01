@@ -1,9 +1,6 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
+﻿using Grpc.Core;
 using PubSubServiceApi;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SubscriberConsoleClient
 {
