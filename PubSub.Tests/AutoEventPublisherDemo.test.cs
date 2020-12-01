@@ -11,29 +11,31 @@ namespace PubSub.Tests
         public void OpenServerDoesNotThrowExceptions()
         {
             // arrange
-            var test = new AutoEventPublisherDemo();
+            using (var test = new AutoEventPublisherDemo())
+            {
+                // act
+                test.OpenServerAndPublishEvents();
 
-            // act
-            test.OpenServerAndPublishEvents();
-
-            // assert
-            Assert.IsNotNull(test);
-
+                // assert
+                Assert.IsNotNull(test);
+            }
         }     
         
         [Test]
         public void UnSubscribeDoesNotThrowExceptions()
         {
             // arrange
-            var test = new AutoEventPublisherDemo();
+            using (var test = new AutoEventPublisherDemo())
+            {
 
-            // act
-            test.Unsubscribe();
-            test.OpenServerAndPublishEvents();
-            test.Unsubscribe();
+                // act
+                test.Unsubscribe();
+                test.OpenServerAndPublishEvents();
+                test.Unsubscribe();
 
-            // assert
-            Assert.IsNotNull(test);
+                // assert
+                Assert.IsNotNull(test);
+            }
         }
 
     }    

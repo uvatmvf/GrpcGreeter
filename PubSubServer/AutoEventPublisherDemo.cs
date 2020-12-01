@@ -8,38 +8,33 @@ using PubSubServiceApi.Services;
 
 namespace PubSubServer
 {
-    public class AutoEventPublisherDemo : Subscriber
+    public class AutoEventPublisherDemo : Subscriber, IDisposable
     {
-        private Server _server;
-
-        public int Port { get; set; } = 50051;
+        private ServerService<PubSubImpl> _server;
+        private bool disposedValue;
 
         public void OpenServerAndPublishEvents()
         {
-            var service = new PubSubImpl();
-            _server = new Server
-            {
-                Services = { PubSub.BindService(service) },
-                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
-            };
+            _server = new ServerService<PubSubImpl>();            
             _server.Start();
-
+            
             CancellationTokenSource = new CancellationTokenSource();
+
             var randomGenerator = new Random(1000);
             //TODO split autopublisher into separate class
             Task.Run(async () =>
             {
                 while (!CancellationTokenSource.IsCancellationRequested)
                 {
-                    if (service.SubscriberWritersMap.Count > 0)
+                    if (_server.Service.SubscriberWritersMap.Count > 0)
                     {
-                        var indexedKeys = service.SubscriberWritersMap.Select((kvp, idx) =>
+                        var indexedKeys = _server.Service.SubscriberWritersMap.Select((kvp, idx) =>
                             new { Idx = idx, kvp.Key });
 
-                        var subscriptionIdx = randomGenerator.Next(service.SubscriberWritersMap.Count);
+                        var subscriptionIdx = randomGenerator.Next(_server.Service.SubscriberWritersMap.Count);
                         var randomSubscriptionId = indexedKeys.Single(x => x.Idx == subscriptionIdx).Key;
 
-                        service.Publish(new SubscriptionEvent()
+                        _server.Service.Publish(new SubscriptionEvent()
                         {
                             Event = new Event()
                             {
@@ -57,7 +52,7 @@ namespace PubSubServer
         
         public override Task Subscribe(string subscriptionId)
         {
-            return Task.Run(() => OpenServerAndPublishEvents());
+            return Task.Run(() => OpenServerAndPublishEvents());            
         }
 
         public override void Unsubscribe() => CancelAutoPublishAndShutDownServer();
@@ -65,8 +60,37 @@ namespace PubSubServer
         private void CancelAutoPublishAndShutDownServer()
         {
             CancellationTokenSource?.Cancel();
-            _server?.ShutdownAsync().Wait();
+            _server?.Dispose();
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                    _server?.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~AutoEventPublisherDemo()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

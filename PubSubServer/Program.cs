@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PubSubServiceApi;
+using PubSubServiceApi.Services;
+using System;
 
 namespace PubSubServer
 {
@@ -10,7 +12,7 @@ namespace PubSubServer
 
             autoPublisher.OpenServerAndPublishEvents();
 
-            Console.WriteLine("Greeter server listening on port " + autoPublisher.Port);
+            Console.WriteLine("Greeter server listening on port " + ServerService<PubSubImpl>.Port);
             Console.WriteLine("Press any key to stop the server...");
             Console.ReadKey();
 
