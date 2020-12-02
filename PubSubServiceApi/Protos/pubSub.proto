@@ -6,10 +6,9 @@ import "google/protobuf/empty.proto";
 
 package pubSubServiceApi;
 
-// The greeting service definition.
 service PubSub {
-  // Sends a greeting
   rpc GetAnEvent (google.protobuf.Empty) returns (Event) {}
+  rpc Publish(Event) returns (google.protobuf.Empty) {}
   rpc Subscribe(Subscription) returns (stream Event) {}
   rpc Unsubscribe(Subscription) returns (Unsubscription) {}
 }

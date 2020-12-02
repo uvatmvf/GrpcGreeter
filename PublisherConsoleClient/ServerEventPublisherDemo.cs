@@ -1,5 +1,4 @@
-﻿using Grpc.Core;
-using PubSubServiceApi;
+﻿using PubSubServiceApi;
 using System;
 using System.Linq;
 using System.Threading;
@@ -7,21 +6,24 @@ using System.Threading.Tasks;
 
 namespace PublisherConsoleClient
 {
-    public class ServerEventPublisherDemo : Subscriber, IDisposable
+    public class ServerEventPublisherDemo : Client, IDisposable
     {
         private ServerService<PubSubImpl> _server;
         private bool disposedValue;
 
-        public void PublishEvents()
+        public Task PublishEvents()
         {
             _server = new ServerService<PubSubImpl>();
             _server.Start();
-
             CancellationTokenSource = new CancellationTokenSource();
+            return Publish(null);
+        }
 
-            var randomGenerator = new Random(1000);
+        public override Task Publish(Event e)
+        {
             //TODO split autopublisher into separate class
-            Task.Run(async () =>
+            var randomGenerator = new Random(1000);
+            return Task.Run(async () =>
             {
                 while (!CancellationTokenSource.IsCancellationRequested)
                 {
@@ -33,18 +35,17 @@ namespace PublisherConsoleClient
                         var subscriptionIdx = randomGenerator.Next(_server.Service.SubscriberWritersMap.Count);
                         var randomSubscriptionId = indexedKeys.Single(x => x.Idx == subscriptionIdx).Key;
 
-                        _server.Service.Publish(new Event()
+                        await _server.Service.Publish(new Event()
                         {
                             Payload = $"And event for '{randomSubscriptionId}' {Guid.NewGuid():N}",
                             PublisherId = randomSubscriptionId
-                        });
+                        }, null);
                     }
 
                     await Task.Delay(1000);
                 }
             }, CancellationTokenSource.Token);
         }
-
 
         public override Task Subscribe(string subscriptionId)
         {
@@ -75,18 +76,12 @@ namespace PublisherConsoleClient
             }
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~AutoEventPublisherDemo()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
     }
 }

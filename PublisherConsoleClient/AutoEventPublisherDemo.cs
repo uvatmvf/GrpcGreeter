@@ -20,11 +20,11 @@ namespace PublisherConsoleClient
             {
                 while (!_cancellationTokenSource.IsCancellationRequested)
                 {
-                    _service.Publish(new Event()
+                    await _service.Publish(new Event()
                     {
                         Payload = $"And event for '{Guid.NewGuid()}' {Guid.NewGuid():N}",
                         PublisherId = Guid.Empty.ToString("N")
-                    });
+                    }, null);
 
                     await Task.Delay(1000);
                 }

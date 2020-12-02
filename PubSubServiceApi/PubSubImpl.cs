@@ -22,8 +22,14 @@ namespace PubSubServiceApi
         public override Task<Event> GetAnEvent(Empty request, ServerCallContext context) =>
             Task.FromResult(new Event { Payload = DateTime.Now.ToLongTimeString() });
 
-        public void Publish(Event subscriptionEvent) =>
-            _buffer.Post(subscriptionEvent);
+        public override Task<Empty> Publish(Event request, ServerCallContext context)
+        {
+            return Task.Run(() =>
+            {                
+                _buffer.Post(request);
+                return new Empty();
+            });
+        }
 
         public override async Task Subscribe(Subscription request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {

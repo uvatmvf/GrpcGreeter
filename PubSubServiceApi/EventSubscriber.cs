@@ -5,7 +5,7 @@ using static PubSubServiceApi.PubSub;
 
 namespace PubSubServiceApi
 {
-    public class EventSubscriber : Subscriber
+    public class EventSubscriber : Client
     {
         private static PubSubClient _pubSubClient;
         private Subscription _subscription;
@@ -17,6 +17,11 @@ namespace PubSubServiceApi
         {
             add { base.OnEventReceived += value; }
             remove { base.OnEventReceived -= value; }
+        }
+
+        public override Task Publish(Event e)
+        {
+            return Task.Run(() => _pubSubClient.Publish(e));
         }
 
         public override async Task Subscribe(string subscriptionId)

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace PubSubServiceApi
 {
-    public class SubscriberClient : Subscriber
+    public class RemoteClient : Client
     {
         private const int MillisecondsDelay = 2000;
         //TODO refactor common logic out of inheritance.
-        private Subscriber _subscriber;
+        private Client _subscriber;
         private Func<Channel> _channelFactory;
 
-        public SubscriberClient(Func<Channel> channelFactory) =>
+        public RemoteClient(Func<Channel> channelFactory) =>
             _channelFactory = channelFactory;
 
         public new event EventHandler<Event> OnEventReceived
@@ -22,6 +22,13 @@ namespace PubSubServiceApi
             remove { _subscriber.OnEventReceived -= value; }
         }
         public Action<string> OnGetAnEvent { get; set; }
+
+        public override Task Publish(Event e)
+        {
+            var channel = _channelFactory.Invoke();
+            var client = new PubSub.PubSubClient(channel);
+            return Task.Run(() => client.Publish(e));
+        }
 
         public override Task Subscribe(string subscriptionId)
         {
@@ -51,5 +58,6 @@ namespace PubSubServiceApi
             _subscriber?.Unsubscribe();
         }
 
+        
     }
 }

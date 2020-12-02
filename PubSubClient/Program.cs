@@ -8,9 +8,8 @@ namespace SubscriberConsoleClient
     {
         static void Main(string[] args)
         {
-            var subscriber = new SubscriberClient(() => new Channel("localhost:50051", ChannelCredentials.Insecure));
-            subscriber.Subscribe(Guid.Empty.ToString("N"));
-
+            var subscriber = new RemoteClient(() => new Channel("localhost:50051", ChannelCredentials.Insecure));
+            subscriber.Subscribe(Guid.Empty.ToString("N"));            
             subscriber.OnEventReceived += Subscriber_OnEventReceived;            
 
             Console.WriteLine("Press any key to exit subscriber console...");
