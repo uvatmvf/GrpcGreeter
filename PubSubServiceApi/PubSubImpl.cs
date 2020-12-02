@@ -1,14 +1,13 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using PubSubServer;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace PubSubServiceApi.Services
+namespace PubSubServiceApi
 {
-    // Code modified/trained from www.github/cblob/main/grpc.demo/grpc.demo.server/Program.cs
+
     public class PubSubImpl : PubSub.PubSubBase
     {
         private readonly BufferBlock<SubscriptionEvent> _buffer = new BufferBlock<SubscriptionEvent>();
@@ -30,7 +29,7 @@ namespace PubSubServiceApi.Services
         {
             SubscriberWritersMap[request.Id] = responseStream;
 
-            while(SubscriberWritersMap.Count > 0)
+            while (SubscriberWritersMap.Count > 0)
             {
                 var subscriptionEvent = await _buffer.ReceiveAsync();
                 if (SubscriberWritersMap.ContainsKey(subscriptionEvent.SubscriptionId))

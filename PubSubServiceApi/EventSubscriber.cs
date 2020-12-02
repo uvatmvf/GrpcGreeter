@@ -1,17 +1,16 @@
-﻿using PubSubServiceApi;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using static PubSubServiceApi.PubSub;
 
-namespace SubscriberConsoleClient
+namespace PubSubServiceApi
 {
     public class EventSubscriber : Subscriber
     {
         private static PubSubClient _pubSubClient;
         private Subscription _subscription;
 
-        public EventSubscriber(PubSubClient pubSubClient) => 
+        public EventSubscriber(PubSubClient pubSubClient) =>
             _pubSubClient = pubSubClient;
 
         public new event EventHandler<Event> OnEventReceived
@@ -24,14 +23,14 @@ namespace SubscriberConsoleClient
         {
             _subscription = new Subscription() { Id = subscriptionId };
             Console.WriteLine($">> SubscriptionId : { subscriptionId}");
-            using(var call = _pubSubClient.Subscribe(_subscription))
+            using (var call = _pubSubClient.Subscribe(_subscription))
             {
                 CancellationTokenSource = new CancellationTokenSource();
                 await Task.Run(async () =>
                 {
                     while (await call.ResponseStream.MoveNext(CancellationTokenSource.Token))
                     {
-                        ReceiveEvent(call.ResponseStream.Current);                        
+                        ReceiveEvent(call.ResponseStream.Current);
                     }
                 }, CancellationTokenSource.Token);
             }
@@ -42,5 +41,5 @@ namespace SubscriberConsoleClient
             CancellationTokenSource?.Cancel();
             _pubSubClient?.Unsubscribe(_subscription);
         }
-    }    
+    }
 }

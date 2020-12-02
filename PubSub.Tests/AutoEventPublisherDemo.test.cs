@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using PubSubServer;
+using PublisherConsoleClient;
 
 namespace PubSub.Tests
 {
@@ -11,10 +11,10 @@ namespace PubSub.Tests
         public void OpenServerDoesNotThrowExceptions()
         {
             // arrange
-            using (var test = new AutoEventPublisherDemo())
+            using (var test = new ServerEventPublisherDemo())
             {
                 // act
-                test.OpenServerAndPublishEvents();
+                test.PublishEvents();
 
                 // assert
                 Assert.IsNotNull(test);
@@ -25,12 +25,12 @@ namespace PubSub.Tests
         public void UnSubscribeDoesNotThrowExceptions()
         {
             // arrange
-            using (var test = new AutoEventPublisherDemo())
+            using (var test = new ServerEventPublisherDemo())
             {
 
                 // act
                 test.Unsubscribe();
-                test.OpenServerAndPublishEvents();
+                test.PublishEvents();
                 test.Unsubscribe();
 
                 // assert

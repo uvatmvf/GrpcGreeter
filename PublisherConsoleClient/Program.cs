@@ -6,7 +6,12 @@ namespace PublisherConsoleClient
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var demo = new ServerEventPublisherDemo();
+            demo.PublishEvents();
+
+            Console.WriteLine("Press any key to stop the auto event publisher...");
+            Console.ReadKey();
+            demo.Unsubscribe();
         }
     }
 }
