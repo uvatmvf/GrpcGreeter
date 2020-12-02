@@ -15,7 +15,8 @@ service PubSub {
 }
 
 message Event {
-	string Value = 1;
+	string Payload = 1;
+	string PublisherId = 2;
 }
 
 message Subscription {

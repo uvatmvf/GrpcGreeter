@@ -33,13 +33,10 @@ namespace PublisherConsoleClient
                         var subscriptionIdx = randomGenerator.Next(_server.Service.SubscriberWritersMap.Count);
                         var randomSubscriptionId = indexedKeys.Single(x => x.Idx == subscriptionIdx).Key;
 
-                        _server.Service.Publish(new SubscriptionEvent()
+                        _server.Service.Publish(new Event()
                         {
-                            Event = new Event()
-                            {
-                                Value = $"And event for '{randomSubscriptionId}' {Guid.NewGuid():N}"
-                            },
-                            SubscriptionId = randomSubscriptionId
+                            Payload = $"And event for '{randomSubscriptionId}' {Guid.NewGuid():N}",
+                            PublisherId = randomSubscriptionId
                         });
                     }
 
