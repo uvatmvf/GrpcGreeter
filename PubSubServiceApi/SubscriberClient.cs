@@ -1,11 +1,10 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using PubSubServiceApi;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SubscriberConsoleClient
+namespace PubSubServiceApi
 {
     public class SubscriberClient : Subscriber
     {
@@ -14,7 +13,7 @@ namespace SubscriberConsoleClient
         private Subscriber _subscriber;
         private Func<Channel> _channelFactory;
 
-        public SubscriberClient(Func<Channel> channelFactory) => 
+        public SubscriberClient(Func<Channel> channelFactory) =>
             _channelFactory = channelFactory;
 
         public new event EventHandler<Event> OnEventReceived

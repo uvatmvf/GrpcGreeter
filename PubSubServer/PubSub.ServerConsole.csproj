@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PubSubServiceApi\PubSubServiceApi.csproj" />
+    <ProjectReference Include="..\PubSubServiceApi\PubSub.ServiceApi.csproj" />
   </ItemGroup>
 
 </Project>

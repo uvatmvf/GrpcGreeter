@@ -1,6 +1,4 @@
-﻿using PubSubServiceApi;
-
-namespace PubSubServer
+﻿namespace PubSubServiceApi
 {
     public class SubscriptionEvent
     {

@@ -16,7 +16,7 @@ namespace PubSubServiceApi
             Service = new T();
             _server = new Server
             {
-                Services = { PubSub.BindService(Service) },
+                Services = { BindService(Service) },
                 Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
             };
             _server.Start();

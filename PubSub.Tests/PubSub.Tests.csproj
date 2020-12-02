@@ -13,9 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PubSubClient\SubscriberConsoleClient.csproj" />
-    <ProjectReference Include="..\PubSubServer\PubSubServer.csproj" />
-    <ProjectReference Include="..\PubSubServiceApi\PubSubServiceApi.csproj" />
+    <ProjectReference Include="..\PublisherConsoleClient\PubSub.DemoPublisherConsole.csproj" />
+    <ProjectReference Include="..\PubSubClient\PubSub.SubscriberConsole.csproj" />
+    <ProjectReference Include="..\PubSubServer\PubSub.ServerConsole.csproj" />
+    <ProjectReference Include="..\PubSubServiceApi\PubSub.ServiceApi.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,20 +4,19 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PubSubServiceApi.Services;
 
-namespace PubSubServer
+namespace PublisherConsoleClient
 {
-    public class AutoEventPublisherDemo : Subscriber, IDisposable
+    public class ServerEventPublisherDemo : Subscriber, IDisposable
     {
         private ServerService<PubSubImpl> _server;
         private bool disposedValue;
 
-        public void OpenServerAndPublishEvents()
+        public void PublishEvents()
         {
-            _server = new ServerService<PubSubImpl>();            
+            _server = new ServerService<PubSubImpl>();
             _server.Start();
-            
+
             CancellationTokenSource = new CancellationTokenSource();
 
             var randomGenerator = new Random(1000);
@@ -49,10 +48,10 @@ namespace PubSubServer
             }, CancellationTokenSource.Token);
         }
 
-        
+
         public override Task Subscribe(string subscriptionId)
         {
-            return Task.Run(() => OpenServerAndPublishEvents());            
+            return Task.Run(() => PublishEvents());
         }
 
         public override void Unsubscribe() => CancelAutoPublishAndShutDownServer();
