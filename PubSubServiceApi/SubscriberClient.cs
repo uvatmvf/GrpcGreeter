@@ -27,6 +27,7 @@ namespace PubSubServiceApi
         {
             var channel = _channelFactory.Invoke();
             var client = new PubSub.PubSubClient(channel);
+            
             _subscriber = new EventSubscriber(client);
             CancellationTokenSource = new CancellationTokenSource();
             var loopTask = Task.Run(async () =>

@@ -10,7 +10,7 @@ namespace PubSubServiceApi
 
     public class PubSubImpl : PubSub.PubSubBase
     {
-        private readonly BufferBlock<SubscriptionEvent> _buffer = new BufferBlock<SubscriptionEvent>();
+        private readonly BufferBlock<Event> _buffer = new BufferBlock<Event>();
 
         public Dictionary<string, IServerStreamWriter<Event>> SubscriberWritersMap { get; private set; }
 
@@ -22,8 +22,14 @@ namespace PubSubServiceApi
         public override Task<Event> GetAnEvent(Empty request, ServerCallContext context) =>
             Task.FromResult(new Event { Value = DateTime.Now.ToLongTimeString() });
 
-        public void Publish(SubscriptionEvent subscriptionEvent) =>
-            _buffer.Post(subscriptionEvent);
+        public override Task<Empty> Publish(Event request, ServerCallContext context)
+        {            
+            return Task.Run(() =>
+            {
+                _buffer.Post(request);
+                return new Empty();
+            });
+        }
 
         public override async Task Subscribe(Subscription request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
@@ -32,9 +38,9 @@ namespace PubSubServiceApi
             while (SubscriberWritersMap.Count > 0)
             {
                 var subscriptionEvent = await _buffer.ReceiveAsync();
-                if (SubscriberWritersMap.ContainsKey(subscriptionEvent.SubscriptionId))
+                if (SubscriberWritersMap.ContainsKey(subscriptionEvent.SenderId))
                 {
-                    await SubscriberWritersMap[subscriptionEvent.SubscriptionId].WriteAsync(subscriptionEvent.Event);
+                    await SubscriberWritersMap[subscriptionEvent.SenderId].WriteAsync(subscriptionEvent.Event);
                 }
             }
         }

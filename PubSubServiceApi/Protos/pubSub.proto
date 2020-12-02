@@ -12,10 +12,13 @@ service PubSub {
   rpc GetAnEvent (google.protobuf.Empty) returns (Event) {}
   rpc Subscribe(Subscription) returns (stream Event) {}
   rpc Unsubscribe(Subscription) returns (Unsubscription) {}
+  rpc Publish(Event) returns (google.protobuf.Empty) { }
+  
 }
 
 message Event {
 	string Value = 1;
+	string SenderId = 2;
 }
 
 message Subscription {
